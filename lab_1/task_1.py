@@ -1,5 +1,9 @@
 def task_1():
-    return ''
+for elem 0:1:9
+    for z 0:1:elem
+	    k+=elem
+
+    return k
 
 
 assert task_1() == '''
