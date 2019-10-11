@@ -1,7 +1,8 @@
 def task_1():
-for elem 0:1:9
-    for z 0:1:elem
-	    k+=elem
+    for elem 0:1:9
+        for z 0:1:elem
+	        k+=elem
+        k+="\n"
 
     return k
 
