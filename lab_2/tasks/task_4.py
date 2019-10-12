@@ -9,6 +9,7 @@ def count_letters(msg):
     :rtype: list
     """
     pass
+    v=[]
 
 
 if __name__ == '__main__':

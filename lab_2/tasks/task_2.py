@@ -12,7 +12,21 @@ def stack_operation(stack_commands):
     :return: List of outputs from commands.
     :rtype: list
     """
+    
+    
     pass
+    v=[]
+    i=0
+    while i<len(stack_commands):
+        q=stack_commands[i]
+        if q[0]=='push':
+            v.append(q[1])
+        if q[0]=='pop':
+            v.pop()
+        if q[0]=='show_max':
+           len(v)
+        i+=1
+    return 	v
 
 
 if __name__ == "__main__":

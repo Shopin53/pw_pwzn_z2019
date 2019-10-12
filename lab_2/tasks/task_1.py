@@ -14,7 +14,9 @@ def counting_sort(values, _max, _min=0):
     :type _min: int
     :return:
     """
-    pass
+    values.sort()
+    return values
+
 
 
 if __name__ == '__main__':
