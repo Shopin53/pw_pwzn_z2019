@@ -14,18 +14,17 @@ def unique(values):
     v=[]
     v.append(q[0])
     k=1
-    print(len(q))
     while k<len(q):
         j=0
         w=0
         while w<len(v):
             if q[w]==q[k]:
                  j=1
-        w+=1
+            w+=1
         if j==0:
             v.append(q[k])
-    k+=1
-    return print(v)
+        k+=1
+    return v
 
 
 if __name__ == "__main__":
