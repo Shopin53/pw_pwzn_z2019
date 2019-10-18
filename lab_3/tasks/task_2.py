@@ -17,6 +17,13 @@ def check_frequency(input):
     :rtype: list
     """
     pass
+    for i in 0:len(comm):
+        if comm[i][0]==0:
+            
+        if comm[i][0]==0:
+            
+        if comm[i][0]==0:
+            
 
 
 _input = """
