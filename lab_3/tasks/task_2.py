@@ -16,16 +16,27 @@ def check_frequency(input):
     :return: list of integers with results of operation 3
     :rtype: list
     """
-    pass
-    for i in 0:len(comm):
-        if comm[i][0]==0:
-            
-        if comm[i][0]==0:
-            
-        if comm[i][0]==0:
-            
-
-
+    def strr(lists):
+        return list(map(int,lists))
+    inttab=input.strip().splitlines()
+    tab_of_tabs=list(map(lambda line: line.split(' '),inttab))    
+    final_tab=list(map(strr,tab_of_tabs))
+    final=final_tab
+    
+    listt=[]
+    ret=[]
+    for i, j in final:
+        if i==1:
+            listt.append(j)
+        #if i==2:
+         #   if j in listt:
+               # listt.pop(j)
+        if i==3:
+            ret.append(listt.count(j))
+            print(listt.count(j))
+    return ret
+    
+    
 _input = """
 1 5
 1 6
@@ -35,7 +46,7 @@ _input = """
 1 10
 1 6
 2 5
-3 2
+3 5
 
 
 """
