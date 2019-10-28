@@ -21,9 +21,7 @@ def parse_input(input):
     return final
         
 
-   
-if __name__ == '__main__':
-    _input = """
+_input = """
     1 5
     1 6 7
     3 2
@@ -33,4 +31,5 @@ if __name__ == '__main__':
     2 5
     3 2
     """ 
+if __name__ == '__main__':
     assert parse_input(_input) == [[1, 5], [1, 6, 7], [3, 2], [1, 10], [1, 10], [1, 6], [2, 5], [3, 2]]

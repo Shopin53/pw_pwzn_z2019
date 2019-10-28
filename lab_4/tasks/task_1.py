@@ -16,7 +16,7 @@ class Calculator:
         # wynik zapisany w tym atrybucie
         self._short_memory = None
 
-    def run(self, operator, arg1, arg2):
+    def run(self, operator, arg1, arg2=''):
         """
         Returns result of given operation.
 
@@ -29,10 +29,17 @@ class Calculator:
         :return: result of operation
         :rtype: float
         """
+        if arg2=='':
+            arg2=self._short_memory;
+        list_operations={'+': arg1+arg2,'-': arg1-arg2,'*': arg1*arg2,'/': arg1/arg2}
+        self._short_memory=list_operations[operator]
+        return (list_operations[operator])
         raise NotImplementedError
 
     def memorize(self):
         """Saves last operation result to memory."""
+        self.memory=self._short_memory
+        return self.memory
         raise NotImplementedError
 
     def clean_memory(self):

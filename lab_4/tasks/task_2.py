@@ -13,8 +13,9 @@ Wszystkie metody sprawdzają wymiar.
 
 class Vector:
     dim = None  # Wymiar vectora
+    list_of_values=[]
     def __init__(self, *args):
-        raise NotImplemented
+        self.vec=args
 
     @staticmethod
     def calculate_vector(beg, end):
@@ -28,7 +29,8 @@ class Vector:
         :return: Calculated vector
         :rtype: tuple
         """
-        raise NotImplemented
+        return Vector.from_points(beg, end).vec
+        
 
     @classmethod
     def from_points(cls, beg, end):
@@ -43,7 +45,59 @@ class Vector:
         :return: New vector
         :rtype: tuple
         """
-        raise NotImplemented
+        if len(end) == len(beg):
+            points = cls(*end) - cls(*beg)
+            return points
+        else:
+            raise ValueError
+        
+    @property
+    def dim(self):
+        return len(self.vec)
+    
+    def __len__(self):
+        elemts = list(i*i for i in self.vec)
+        newVector = sum(elemts) ** 0.5
+        return int(newVector)
+
+ 
+    
+    def __add__(self, second):
+        if self.dim == second.dim:
+            elemts = list(i+j for i, j in zip(self.vec, second.vec))
+            newVector = Vector(*elemts)
+            return newVector
+        else:
+            raise ValueError
+    
+    def __sub__(self, second):
+        if self.dim == second.dim:
+            elemts = list(i-j for i, j in zip(self.vec, second.vec))
+            newVector = Vector(*elemts)
+            return newVector
+        else:
+            raise ValueError
+            
+    def __mul__(self, second):
+        if isinstance(second, Vector):
+            if self.dim == second.dim:
+                elemts = list(i*j for i, j in zip(self.vec, second.vec))
+                newVector = sum(elemts)
+                return newVector
+            else:
+                raise ValueError
+        else:
+            elemts = list(i*second for i in self.vec)
+            newVector = Vector(*elemts)
+            return newVector
+            
+    def __eq__(self, second):
+        if self.dim == second.dim:
+            for i, j in zip(self.vec, second.vec):
+                if i != j:
+                    return False
+            return True        
+        
 
 
 if __name__ == '__main__':
