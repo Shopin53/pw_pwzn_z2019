@@ -52,10 +52,21 @@ class Calculator:
         :rtype: float
         """
         if operator in self.operations:
-            arg2 = arg2 or self.memory
-            if arg2:
-                self._short_memory = self.operations[operator](arg1, arg2)
-                return self._short_memory
+            arg2 = arg2 if arg2 is not None else self.memory
+            if arg2 is not None:
+                try: 
+                    self._short_memory = self.operations[operator](float(arg1), float(arg2))
+                    return self._short_memory
+                except ValueError as exc:
+                    raise NotNumberArgument ('Argument nie numeryczny') from exc
+                except ZeroDivisionError as exc:
+                    raise CalculatorError ('Dzielenie przez zero') from exc
+            if arg2 == 0:
+                raise ZeroDivisionError ('Dzielenie przez zero')
+            else:
+                raise EmptyMemory ('Pusta pamiec')
+        else:
+            raise WrongOperation ('Nie ma takiej operacji')
 
     @property
     def memory(self):
@@ -71,7 +82,10 @@ class Calculator:
 
     def in_memory(self):
         """Prints memorized value."""
-        print(f"Zapamiętana wartość: {self.memory}")
+        if self.memory is not None:
+            print(f"Zapamiętana wartość: {self.memory}")
+        else:
+            raise EmptyMemory ('Pusta pamiec')
 
 
 if __name__ == '__main__':
@@ -83,20 +97,20 @@ if __name__ == '__main__':
     except CalculatorError as exc:
         assert type(exc) == NotNumberArgument
         assert b is None
-
+    
     try:
         b = calc.run('^', 2, 3)
     except CalculatorError as exc:
         assert type(exc) == WrongOperation
         assert b is None
-
+    
     try:
         calc.in_memory()
     except CalculatorError as exc:
         assert type(exc) is EmptyMemory
     else:
         raise AssertionError
-
+    
     try:
         b = calc.run('/', 2)
     except CalculatorError as exc:
@@ -104,7 +118,6 @@ if __name__ == '__main__':
         assert b is None
     else:
         raise AssertionError
-
     try:
         b = calc.run('/', 1, 0)
     except CalculatorError as exc:
