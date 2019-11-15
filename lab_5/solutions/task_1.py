@@ -5,8 +5,8 @@ Podnoszone wyjątki:
 - błędne argumenty (nie liczba) - NotNumberArgument
 - pusta pamięć (zarówno przy pytaniu o pamięć
 jak i operację z argumentem domyślnym) - EmptyMemory
-- dzielenie przez zero jest przekształcane w CalculatorError
 """
+import sys
 from operator import add, mul, sub, truediv
 
 
@@ -14,15 +14,15 @@ class CalculatorError(Exception):
     pass
 
 
-class WrongOperation(Exception):
+class WrongOperation(CalculatorError):
     pass
 
 
-class NotNumberArgument(Exception):
+class NotNumberArgument(CalculatorError):
     pass
 
 
-class EmptyMemory(Exception):
+class EmptyMemory(CalculatorError):
     pass
 
 
@@ -38,6 +38,13 @@ class Calculator:
         self._memory = None
         self._short_memory = None
 
+    @staticmethod
+    def _cast_to_num(val):
+        try:
+            return float(val)
+        except TypeError:
+            return complex(val)
+
     def run(self, operator, arg1, arg2=None):
         """
         Returns result of given operation.
@@ -51,26 +58,28 @@ class Calculator:
         :return: result of operation
         :rtype: float
         """
-        if operator in self.operations:
+        try:
             arg2 = arg2 if arg2 is not None else self.memory
-            if arg2 is not None:
-                try: 
-                    self._short_memory = self.operations[operator](float(arg1), float(arg2))
-                    return self._short_memory
-                except ValueError as exc:
-                    raise NotNumberArgument ('Argument nie numeryczny') from exc
-                except ZeroDivisionError as exc:
-                    raise CalculatorError ('Dzielenie przez zero') from exc
-            if arg2 == 0:
-                raise ZeroDivisionError ('Dzielenie przez zero')
-            else:
-                raise EmptyMemory ('Pusta pamiec')
+            res = self.operations[operator](
+                self._cast_to_num(arg1),
+                self._cast_to_num(arg2),
+            )
+            self._short_memory = self._cast_to_num(res)
+        except KeyError:
+            raise WrongOperation()
+        except (ValueError, TypeError):
+            raise NotNumberArgument()
+        except ZeroDivisionError as _exc:
+            raise CalculatorError() from _exc
         else:
-            raise WrongOperation ('Nie ma takiej operacji')
+            return self._short_memory
 
     @property
     def memory(self):
-        return self._memory
+        if self._memory is not None:
+            return self._memory
+        else:
+            raise EmptyMemory()
 
     def memorize(self):
         """Saves last operation result to memory."""
@@ -82,10 +91,7 @@ class Calculator:
 
     def in_memory(self):
         """Prints memorized value."""
-        if self.memory is not None:
-            print(f"Zapamiętana wartość: {self.memory}")
-        else:
-            raise EmptyMemory ('Pusta pamiec')
+        print(f"Zapamiętana wartość: {self.memory}")
 
 
 if __name__ == '__main__':
@@ -97,20 +103,17 @@ if __name__ == '__main__':
     except CalculatorError as exc:
         assert type(exc) == NotNumberArgument
         assert b is None
-    
     try:
         b = calc.run('^', 2, 3)
     except CalculatorError as exc:
         assert type(exc) == WrongOperation
         assert b is None
-    
     try:
         calc.in_memory()
     except CalculatorError as exc:
         assert type(exc) is EmptyMemory
     else:
         raise AssertionError
-    
     try:
         b = calc.run('/', 2)
     except CalculatorError as exc:
@@ -118,10 +121,8 @@ if __name__ == '__main__':
         assert b is None
     else:
         raise AssertionError
+
     try:
         b = calc.run('/', 1, 0)
     except CalculatorError as exc:
         assert type(exc.__cause__) == ZeroDivisionError
-        assert b is None
-    else:
-        raise AssertionError
