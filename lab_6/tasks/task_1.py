@@ -34,12 +34,54 @@ Otrzymuje się wtedy 2 pkt.
 UWAGA 2: Wszystkie jednoski masy występują w przykładzie.
 """
 from pathlib import Path
+import csv
+from collections import OrderedDict
 
-
+def przelicz_mase(masa):
+    liczba, slowo = masa.split()
+    if slowo=="mg":
+        return float(liczba)*1e-6
+    if slowo=="g":
+        return float(liczba)*1e-3
+    if slowo=="kg":
+        return float(liczba)
+    if slowo=="Mg":
+        return float(liczba)*1e3
+        
 def select_animals(input_path, output_path, compressed=False):
-    pass
-
-
+    zwierzaki={}
+    with open(input_path) as _file:
+        reader=csv.DictReader(_file,delimiter=",")
+        for row in reader:
+            if row['genus'] in zwierzaki.keys():
+                if row['gender'] in zwierzaki[row['genus']].keys():
+                    if przelicz_mase(row['mass']) < przelicz_mase(zwierzaki[row['genus']][row['gender']]['mass']):
+                        zwierzaki[row['genus']][row['gender']]=row
+                else:
+                    zwierzaki[row['genus']][row['gender']]=row
+            else:
+                zwierzaki[row['genus']]={row['gender']:row}
+    zwierzaki=OrderedDict(sorted((zwierzaki.items())))
+    zwierzaki_sort=[]
+    for i in zwierzaki.values():
+        sortowanie_po_nazwie=[j for j in i.values()]
+        sortowanie_po_nazwie.sort(key=lambda k:k['name'])
+        zwierzaki_sort.extend(sortowanie_po_nazwie)
+    with open(output_path,'w', newline='') as _file:
+        if compressed:
+            _file.write('uu')
+            for i in zwierzaki_sort:
+                i['mass']=f"{przelicz_mase(i['mass']):.3e}"
+                if i['gender']=='female':
+                    i['gender']='F'
+                if i['gender']=='male':
+                    i['gender']='M'
+                zapis = csv.DictWriter(_file,['id','gender','mass'], extrasaction='ignore',delimiter='_')
+        else:
+            zapis = csv.DictWriter(_file, zwierzaki_sort[0].keys())
+        zapis.writeheader()
+        zapis.writerows(zwierzaki_sort)
+        
 if __name__ == '__main__':
     input_path = Path('s_animals.txt')
     output_path = Path('s_animals_s.txt')
