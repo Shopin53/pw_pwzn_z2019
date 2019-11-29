@@ -18,6 +18,7 @@ def least_sq(xy):
     :return: Tuple of fitted parameters
     """
     pass
+    cus
 
 
 if __name__ == '__main__':
