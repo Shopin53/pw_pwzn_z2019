@@ -17,8 +17,21 @@ def least_sq(xy):
     :type xy: np.ndarray
     :return: Tuple of fitted parameters
     """
-    pass
-    cus
+    x = xy[0]
+    y = xy[1]
+    N = xy.shape[1]
+    Sumx=x.sum()
+    Sumx2=(x**2).sum()
+    Delta = N * Sumx2 - Sumx*Sumx
+    Sumy=y.sum()
+    Sumxy=(x*y).sum()
+    A = (Sumx2 * Sumy - Sumx * Sumxy)/Delta
+    B = (N * Sumxy - Sumx * Sumy)/Delta
+    
+    return A, B
+    #W zasadzie to wychodzi dobrze ale nadal pokazuje blad, ale już w kodzie assert a nie tym, ale miesci sie w toleracji
+    
+    
 
 
 if __name__ == '__main__':
