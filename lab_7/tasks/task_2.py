@@ -70,7 +70,10 @@ if __name__ == '__main__':
         [False, False, False,  True, False, False],
         [False,  True,  True,  True, False,  True]
     ])
+<<<<<<< HEAD:lab_7/task_2.py
     print(iterate(_board))
+=======
+>>>>>>> b42fae06c7b0ac132da74e4ae5109f84f687bbba:lab_7/tasks/task_2.py
     assert (calculate_neighbours(_board) == np.array([
         [1, 2, 2, 1, 3, 1,],
         [2, 4, 3, 4, 6, 3,],
