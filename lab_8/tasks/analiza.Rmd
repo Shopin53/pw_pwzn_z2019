@@ -1,0 +1,26 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from tools.fit_funcs import least_sq
+
+data = np.loadtxt('data\input01.txt', delimiter=",", skiprows=1).T
+fit=least_sq(data[:2])
+
+data_cutoff=np.abs(data[2]/(data[0]*fit[1]+fit[0]))<0.05
+
+final_data=data.T[data_cutoff].T
+final_fit=least_sq(final_data[:2])
+nope_data=data.T[np.logical_not(data_cutoff)].T
+
+fig, ax = plt.subplots()
+ax.errorbar(final_data[0],final_data[1],yerr=final_data[2], fmt='sk',markersize=2)
+ax.errorbar(nope_data[0],nope_data[1],yerr=nope_data[2], fmt='^r',markersize=2)
+
+all_data_line=data[0]*fit[1]+fit[0]
+ax.plot(data[0],all_data_line,'--c',label='all')
+final_data_line=final_data[0]*final_fit[1]+final_fit[0]
+ax.plot(final_data[0],final_data_line,'--g',label='\u0394<5%')
+ax.legend()
+
+fig
+
+fig.savefig('fitted_input01.png', dpi=200)

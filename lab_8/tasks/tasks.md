@@ -53,3 +53,6 @@ prosta z ograniczeniem `Δ<5%` (kolor zielony).
 oraz druga pozwalająca na zapisanie go do pliku `fitted_input01` 
 w fromacie `png`, z rozdzielczością 200 dpi.
 * Uzyskany wykres ma wyglądać jak `exaple.png`
+
+
+
