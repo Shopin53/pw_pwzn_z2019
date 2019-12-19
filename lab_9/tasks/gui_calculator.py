@@ -1,7 +1,7 @@
 import tkinter as tk
 from functools import partial
 
-from lab_9.tools.calculator import Calculator
+from calculator import Calculator
 
 
 class CalculatorGUI(tk.Frame):
@@ -17,6 +17,9 @@ class CalculatorGUI(tk.Frame):
         self.screen.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.bottom_pad = self.init_bottom_pad()
         self.bottom_pad.pack(side=tk.BOTTOM)
+        
+        self.key_press()
+        
 
     def init_variables(self):
         self.variables['var_1'] = ''
@@ -35,7 +38,7 @@ class CalculatorGUI(tk.Frame):
             tk.Button(
                 num_pad, text=num, width=5,
                 command=partial(self.update_var, num)
-            ).grid(row=ii // 3, column=(2-ii) % 3)
+            ).grid(row=ii // 3, column=(2-ii) % 3+1)
         ii += 1
         tk.Button(
             num_pad, text='C', width=5,
@@ -48,11 +51,29 @@ class CalculatorGUI(tk.Frame):
         ).grid(row=ii // 3, column=ii % 3)
         ii += 1
         tk.Button(
+            num_pad, text='.', width=5,
+            command=partial(self.update_var, '.')
+        ).grid(row=ii // 3, column=ii % 3)
+        ii += 1
+        tk.Button(
             num_pad, text='=', width=5,
             command=self.calculate_result
-        ).grid(row=ii // 3, column=ii % 3)
+        ).grid(row=ii // 4, column=ii % 3+3)
 
         # klawiatura operacji
+        tk.Button(
+            num_pad, text='MC', width=5,
+            command=self.calculator.clean_memory()
+        ).grid(row=0, column=0)
+        tk.Button(
+            num_pad, text='MR', width=5,
+            #command=partial(self.update_var, self.calculator.memory())
+        ).grid(row=1, column=0)
+        tk.Button(
+            num_pad, text='M+', width=5,
+            command=self.calculator.memorize()
+        ).grid(row=2, column=0)
+        
         operation_pad = tk.Frame(bottom_pad)
         operation_pad.pack(side=tk.RIGHT)
         for ii, operation in enumerate(self.calculator.operations.keys()):
@@ -97,15 +118,25 @@ class CalculatorGUI(tk.Frame):
 
     def calculate_result(self):
         if self.variables['var_1'] and self.variables['var_2']:
-            var_1 = int(self.variables['var_1'])
-            var_2 = int(self.variables['var_2'])
+            var_1 = float(self.variables['var_1'])
+            var_2 = float(self.variables['var_2'])
             self.screen['text'] = self.calculator.run(
                 self.variables['operator'], var_1, var_2
             )
             self.init_variables()
-
+            
+    def key_press(self):
+        self.bind('<Shift-Up>',lambda *args: print('ITS ALIVE')) # czemu tylko tak dziala niewiem, ale dziala
+        for i in range(10):
+            self.bind(str(i), partial(self.update_var, i))
+        #for operation in self.calculator.operations.keys():
+         #   self.screen.bind(f'<{operation}>', partial(self.set_operator, operation))
+        self.bind('<Return>',self.calculate_result)
+        self.focus_set()
+        
 
 if __name__ == '__main__':
     root = tk.Tk()
+    
     CalculatorGUI(root).pack()
     root.mainloop()
