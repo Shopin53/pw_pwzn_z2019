@@ -1,8 +1,22 @@
 import requests
-
+from urllib.parse import urljoin
+from json import JSONDecodeError
 
 def get_cities_woeid(query: str, timeout: float = 5.):
-    pass
+    url = 'https://www.metaweather.com/api/'
+    cities_url=urljoin(url,'location/search')
+    req=requests.get(cities_url,params=dict(query=query),timeout=timeout)
+    list={}
+    if req.status_code>=400:
+        raise req.exceptions.HTTPError
+    try:
+        cities=req.json()
+    except JSONDecodeError:
+        raise RuntimeError
+    
+    for city in cities:
+        list[city['title']]=city['woeid']
+    return list
 
 
 if __name__ == '__main__':
