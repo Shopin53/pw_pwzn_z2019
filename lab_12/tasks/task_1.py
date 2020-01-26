@@ -1,5 +1,15 @@
-def generate_fibonacci(n=100):
-    pass
+def generate_fibonacci(numb=100):
+    if not isinstance(numb, int) or numb < 1:
+        raise RuntimeError
+    n = numb if numb <= 100 and numb>=1 else 100
+    value = 0
+    yield value
+    i = 1
+    fibonaci = 1
+    while i < n:
+        yield fibonaci
+        value, fibonaci = fibonaci, value + fibonaci
+        i += 1
 
 
 if __name__ == '__main__':
